@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class SuperstoreController {
@@ -35,10 +36,9 @@ public class SuperstoreController {
     }
 
     //handler method to intercept POST request from the form
-    //and also redirect to the inventory page after form submission
     @PostMapping("/submitItem")
-    public String handleSubmit(Item item){
-        
+    public String handleSubmit(Item item, RedirectAttributes redirectAttributes){
+                
         //check if item exists in the datastore using its id to get its index, so it is updated or new item created if not
         int index = getItemIndex(item.getId());
         if (index == Constants.NOT_FOUND) {
@@ -46,7 +46,9 @@ public class SuperstoreController {
         }else {
             items.set(index, item);
         }
-        
+        //RedirectAttributes added to 
+        redirectAttributes.addFlashAttribute("status", Constants.SUCCESS_STATUS);
+        //also redirect to the inventory page after form submission
         return "redirect:/inventory";
     }
 

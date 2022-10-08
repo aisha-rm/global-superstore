@@ -15,6 +15,11 @@
         <a class="active" th:href="@{/inventory}">Inventory</a>
     </div>
 
+    <div class="alert success" th:if="${status} == 'success'">
+        <!--only displays when the FlashAttribute it evaluates i.e status is equal success-->
+        <strong> You successfully submited the item! </strong>
+    </div>
+
     <div class="container">
         <table>
             <tr class="head">
