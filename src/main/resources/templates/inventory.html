@@ -20,6 +20,11 @@
         <strong> You successfully submited the item! </strong>
     </div>
 
+    <div class="alert" th:if="${status} == 'failed'">
+        <!--only displays when the FlashAttribute it evaluates i.e status is equal failed-->
+        <strong> You failed to submit the item </strong>
+    </div>
+
     <div class="container">
         <table>
             <tr class="head">

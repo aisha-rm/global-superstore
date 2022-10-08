@@ -1,7 +1,9 @@
 package com.tmt.globalsuperstore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,13 +43,21 @@ public class SuperstoreController {
                 
         //check if item exists in the datastore using its id to get its index, so it is updated or new item created if not
         int index = getItemIndex(item.getId());
+        String status = Constants.SUCCESS_STATUS;
+
         if (index == Constants.NOT_FOUND) {
+            //add new item if it doesnt exist
             items.add(item);
-        }else {
+        }else if (within5Days(item.getDate(), items.get(index).getDate())) {
+            //if updated date is within 5 days of the original date of the item, update it
             items.set(index, item);
+        }else {
+            //if item exists but updated date is not within 5 days
+            status = Constants.FAILED_STATUS;
         }
-        //RedirectAttributes added to 
-        redirectAttributes.addFlashAttribute("status", Constants.SUCCESS_STATUS);
+
+         //RedirectAttributes temporarily store data like status that survives the redirect and is used in generating the redirected page 
+        redirectAttributes.addFlashAttribute("status", status);
         //also redirect to the inventory page after form submission
         return "redirect:/inventory";
     }
@@ -66,5 +76,11 @@ public class SuperstoreController {
             if (items.get(i).getId().equals(id)) return i;
              }
         return Constants.NOT_FOUND; //returned if the index is not found
+    }
+
+    public boolean within5Days(Date newDate, Date oldDate) {
+        //returns true if two dates are within 5 days
+        long diff = Math.abs(newDate.getTime() - oldDate.getTime());
+        return (int) (TimeUnit.MILLISECONDS.toDays(diff)) <= 5;
     }
 }
