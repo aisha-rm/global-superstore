@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +23,7 @@ public class SuperstoreController {
     //mapping GET request to handler methods below
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id){
-        //add categories for drop down menu in form
-        model.addAttribute("categories", Constants.CATEGORIES);
-
+                
         //create item object that will be bound to the form 
         //check if item exists in data store so the form will prepopulate it, else create new item object 
         Item item;
@@ -39,8 +40,13 @@ public class SuperstoreController {
 
     //handler method to intercept POST request from the form
     @PostMapping("/submitItem")
-    public String handleSubmit(Item item, RedirectAttributes redirectAttributes){
-                
+    public String handleSubmit(@Valid Item item, BindingResult result, RedirectAttributes redirectAttributes){
+       
+        if(item.getPrice() < item.getDiscount()){
+            result.rejectValue("price", "", "Price cannot be less than the discount");
+        }
+        if (result.hasErrors()) return "form";
+
         //check if item exists in the datastore using its id to get its index, so it is updated or new item created if not
         int index = getItemIndex(item.getId());
         String status = Constants.SUCCESS_STATUS;

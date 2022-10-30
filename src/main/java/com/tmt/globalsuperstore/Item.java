@@ -3,15 +3,28 @@ package com.tmt.globalsuperstore;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Item {
+    @NotBlank(message = "Please choose a category")
     private String category;
+
+    @NotBlank(message = "Name cannot be blank")
     private String name;
+
+    @Min(value=0, message="Price cannot be negative")
     private Double price;
+
+    @Min(value=0, message="Discount cannot be negative")
     private Double discount;
+
     //set datetime format to be in sync with default format from the input in the form template
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message="Date must be in the past")
     private Date date;
     //add id so updating will retain the object 
     private String id;
