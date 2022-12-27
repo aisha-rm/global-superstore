@@ -4,13 +4,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.tmt.globalsuperstore.Constants;
 import com.tmt.globalsuperstore.Item;
 import com.tmt.globalsuperstore.repository.StoreRepository;
 
+@Service
 public class StoreService {
 
-    StoreRepository storeRepo = new StoreRepository();
+    @Autowired
+    StoreRepository storeRepo;
 
     //interfacing controller and repo
     public Item getItem(int index){

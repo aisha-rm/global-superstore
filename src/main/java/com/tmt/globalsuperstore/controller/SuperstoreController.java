@@ -2,6 +2,7 @@ package com.tmt.globalsuperstore.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,8 @@ import com.tmt.globalsuperstore.service.StoreService;
 @Controller
 public class SuperstoreController {
 
-    StoreService storeService = new StoreService();
+    @Autowired
+    StoreService storeService;
         
     //mapping GET request to handler methods below
     @GetMapping("/")
